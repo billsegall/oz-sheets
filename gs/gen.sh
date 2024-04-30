@@ -5,7 +5,7 @@ attrs="annual_dividend_yield average_daily_volume bid_price change_in_percent ch
 for attr in $attrs; do
     echo
     echo "// Returns $attr for the instrument"
-    echo "  function ASX_$attr(instrument) {"
+    echo "function ASX_$attr(instrument) {"
     echo "  return ASX(instrument, \"$attr\")"
     echo "}"
 done
