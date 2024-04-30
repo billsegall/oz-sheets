@@ -8,9 +8,13 @@ the original idea of which came from
 
 ## Functions
 
-```ASX_last_price(symbol)``` will fetch the current (but 30m delayed) price from the ASX website
 
 ```ASX(symbol, attribute)``` will return the value of any attribute for a given symbol from the ASX website.
+
+For convenience we supply a per-attribute lookup function for each supported
+support (see below) of the form:
+
+```ASX_last_price(symbol)``` will fetch the current (but 30m delayed) price from the ASX website
 
 Currently supported attributes are:
 ```
