@@ -16,6 +16,9 @@ support (see below) of the form:
 
 ```ASX_last_price(symbol)``` will fetch the current (but 30m delayed) price from the ASX website
 
+```ASX_all(instrument)``` will insert an array of all keys/attributes. You can transpose() that to make it vertical or extract what you need directly, e.g., ```index(ASX_all("BHP"), 2, 10)``` will get you the volume.
+
+
 Currently supported attributes are:
 ```
 annual_dividend_yield

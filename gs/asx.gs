@@ -16,6 +16,15 @@ function ASX_json(instrument) {
   return json;
 }
 
+// Returns all attribute/values as a 2d array
+// Use transpose(ASX_all(instrument) if you want it vertical
+// You can also directly access a field you want, e.g.
+// '=index(ASX_all("BHP"), 2, 10)' will get you the volume
+function ASX_all(instrument) {
+  var json = ASX_json(instrument);
+  return [Object.keys(json), Object.values(json)];
+}
+
 // Individual attribute lookup functions
 
 // Returns annual_dividend_yield for the instrument
