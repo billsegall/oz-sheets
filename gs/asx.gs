@@ -6,7 +6,7 @@ function ASX(instrument, attribute) {
   return json[attribute];
 }
 
-// Fetch the json from the ASX and return it as a JSON object
+// Helper
 function ASX_json(instrument) {
   var url = "https://www.asx.com.au/asx/1/share/" + instrument + ".json";
   var response = UrlFetchApp.fetch(url);
@@ -16,16 +16,24 @@ function ASX_json(instrument) {
   return json;
 }
 
-// Returns all attribute/values as a 2d array
-// Use transpose(ASX_all(instrument) if you want it vertical
+// Returns all attribute/values as a 2d (vertical) array
+// Use transpose(ASX_all(instrument) if you want it horizontal
 // You can also directly access a field you want, e.g.
-// '=index(ASX_all("BHP"), 2, 10)' will get you the volume
+// '=index(ASX_all("BHP"), 12, 2)' will get you the eps
+// Note that the asx are free to change the supported attributes and this might change
 function ASX_all(instrument) {
   var json = ASX_json(instrument);
-  return [Object.keys(json), Object.values(json)];
+  // Convert to a sorted array
+  var kv = [];
+  for (k of Object.keys(json).sort()) {
+    kv.push([k, json[k]]);
+  }
+  return kv;
 }
 
-// Individual attribute lookup functions
+//
+// Attribute specific functions
+//
 
 // Returns annual_dividend_yield for the instrument
 function ASX_annual_dividend_yield(instrument) {
