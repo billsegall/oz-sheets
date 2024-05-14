@@ -1,22 +1,21 @@
-# asx-sheets
+# oz-sheets
 
-Fetch stock market data for ASX codes into Google Sheeets.
+Fetch stock market data for Australian stock markets into Google Sheeets.
 
-This provides ASX functions in Apps Script for Google Sheets,
+This provides ASX and NSX functions in Apps Script for Google Sheets,
 the original idea of which came from
 [a reddit post](https://www.reddit.com/r/ASX_Bets/comments/mbbdvf/how_to_get_3_decimal_places_for_stock_prices_in/)
 
-## Functions
+## ASX
 
-
-```ASX(symbol, attribute)``` will return the value of any attribute for a given symbol from the ASX website.
+```ASX(instrument, attribute)``` will return the value of any attribute for a given instrument from the ASX website.
 
 For convenience we supply a per-attribute lookup function for each supported
 support (see below) of the form:
 
-```ASX_last_price(symbol)``` will fetch the current (but 30m delayed) price from the ASX website
+```ASX_last_price(instrument)``` will fetch the current (but 30m delayed) price from the ASX website
 
-```ASX_all(instrument)``` will insert an array of all keys/attributes. You can transpose() that to make it vertical or extract what you need directly, e.g., ```index(ASX_all("BHP"), 2, 10)``` will get you the volume.
+```ASX_all(instrument)``` will insert an array of all keys/attributes. You can transpose() that to make it hotizontal or extract what you need directly, e.g., ```index(ASX_all("BHP"), 12, 2)``` will get you the eps.
 
 
 Currently supported attributes are:
@@ -54,3 +53,7 @@ year_low_price
 year_open_date
 year_open_price
 ```
+
+## NSX
+
+```NSX_last_price(instrument)``` will fetch the current (but 30m delayed) price from the NSX website
