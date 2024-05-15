@@ -2,6 +2,9 @@
 
 Fetch stock market data for Australian stock markets into Google Sheeets.
 
+It exists as the ```googlefinance()``` functions support only two decimal places for Australian
+equities and I needed more granularity/accuracy.
+
 This provides ASX and NSX functions in Apps Script for Google Sheets,
 the original idea of which came from
 [a reddit post](https://www.reddit.com/r/ASX_Bets/comments/mbbdvf/how_to_get_3_decimal_places_for_stock_prices_in/)
