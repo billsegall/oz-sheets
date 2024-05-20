@@ -1,4 +1,4 @@
-/* See https://github.com/billsegall/asx-sheets */
+/* See https://github.com/billsegall/oz-sheets */
 
 // Return the value of the attribute for the instrument from the ASX website
 function ASX(instrument, attribute) {

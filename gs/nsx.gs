@@ -1,3 +1,5 @@
+/* See https://github.com/billsegall/oz-sheets */
+
 // Returns last_price for the instrument by scraping the NSX website
 function NSX_last_price(instrument) {
   var url = "https://www.nsx.com.au/summary/" + instrument;
