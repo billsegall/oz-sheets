@@ -18,7 +18,7 @@ support (see below) of the form:
 
 ```ASX_last_price(instrument)``` will fetch the current (but 30m delayed) price from the ASX website
 
-```ASX_all(instrument)``` will insert an array of all keys/attributes. You can transpose() that to make it hotizontal or extract what you need directly, e.g., ```index(ASX_all("BHP"), 12, 2)``` will get you the eps.
+```ASX_all(instrument)``` will insert an array of all keys/attributes. You can transpose() that to make it horizontal or extract what you need directly, e.g., ```index(ASX_all("BHP"), 12, 2)``` will get you the eps.
 
 
 Currently supported attributes are:
