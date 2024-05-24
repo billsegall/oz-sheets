@@ -14,7 +14,7 @@ the original idea of which came from
 ```ASX(instrument, attribute)``` will return the value of any attribute for a given instrument from the ASX website.
 
 For convenience we supply a per-attribute lookup function for each supported
-support (see below) of the form:
+attribute (see below) of the form:
 
 ```ASX_last_price(instrument)``` will fetch the current (but 30m delayed) price from the ASX website
 
