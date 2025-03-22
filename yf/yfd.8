@@ -6,7 +6,7 @@
 .BR yfd " \- expose Yahoo Finance data via a simple JSON API."
 .SH SYNOPSIS
 .TP
-yfd [\-h|\-V]
+yfd [\-p nnn] [\-h] [\-v]
 .SH OPTIONS
 .LP
 .TP 4
@@ -14,7 +14,11 @@ yfd [\-h|\-V]
 Prints a brief usage message containing legal syntax and functions and
 exits.
 .TP 4
-\fB\-V\fP (\fB\-\-version\fP)
+\fB\-p\fP n
+Specify a TCP port number on which to listen for HTTP connections.
+The default is 8000.
+.TP 4
+\fB\-v\fP (\fB\-\-version\fP)
 Prints the version number.
 .SH DESCRIPTION
 .LP
@@ -30,8 +34,7 @@ output, relying on a systemd unit to run as a service.
 .B yfd
 should not be deployed directly in production, but should use a
 web-facing proxy such as
-.B nginx
-
+.BR nginx .
 .LP
 .SH EXIT CODES
 .PP
@@ -40,7 +43,7 @@ web-facing proxy such as
 Suceeded.
 .TP 8
 1
-On error.
+Error.
 .LP
 .SH "SEE ALSO"
 .LP
@@ -48,6 +51,9 @@ On error.
 .BR systemd (8),
 .LP
 .B https://finance.yahoo.com
+.SH SOURCE
+.LP
+.B https://github.com/billsegall/oz-sheets
 .SH AUTHORS
 .LP
-David Arnold (davida@pobox.com)
+David Arnold (d@0x1.org) and Bill Segall (bill@segall.net)
