@@ -8,6 +8,9 @@ from fastapi.responses import JSONResponse
 import yfinance
 
 
+__version__ = "1.0a1"
+
+
 api = FastAPI()
 
 @api.get("/yf/{symbol}")
