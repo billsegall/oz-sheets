@@ -10,15 +10,15 @@ the original idea of which came from
 [a reddit post](https://www.reddit.com/r/ASX_Bets/comments/mbbdvf/how_to_get_3_decimal_places_for_stock_prices_in/)
 
 
-## [NSX](https://www.nsx.com.au/)
+## NSX National Stock Exchange of Australia
 
-NSX data is obtained from the NSX website
+[NSX](https://www.nsx.com.au/) data is obtained from the NSX website
 
 ```NSX_last_price(instrument)``` will fetch the current (but 30m delayed) price from the NSX website
 
-## [ASX](https://www.asx.com.au/) 
+## ASX Australian Stock Exchange
 
-ASX data is obtained from [Yahoo! finance](https://finance.yahoo.com/) using [yfinance](https://pypi.org/project/yfinance/)
+[ASX](https://www.asx.com.au/) data is obtained from [Yahoo! finance](https://finance.yahoo.com/) using [yfinance](https://pypi.org/project/yfinance/)
 
 ```ASX(instrument, attribute)``` will return the value of an attribute (e.g., "industry") for a given instrument (e.g., ```BHP.AX```)
 
