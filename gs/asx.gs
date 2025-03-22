@@ -1,6 +1,6 @@
 /* https://github.com/billsegall/oz-sheets */
 
-// Return the value of the attribute for the instrument from the ASX website
+// Return the value of the attribute for the instrument
 function ASX_test(instrument, attribute) {
   // For testing
   if (instrument == null) {
@@ -45,11 +45,21 @@ function json2array(json, kv = [], s = "") {
   return kv;
 }
 
-// Return the value of the attribute for the instrument from the ASX website
-function ASX_price(instrument) {
+// Return the last known price (~20 min delayed)
+function ASX_last_price(instrument) {
   var json = ASX_json(instrument);
   return json["currentPrice"];
 }
+
+// Return the value of the attribute for the instrument
+function ASX(instrument, attribute) {
+  var json = ASX_json(instrument);
+  if (attribute == null) {
+    attribute = "currentPrice";
+  }
+  return json[attribute];
+}
+
 
 // Fetch the json from our yahoo finance service
 function ASX_json(instrument) {
