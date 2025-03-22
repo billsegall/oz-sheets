@@ -9,6 +9,8 @@ function ASX_test(instrument, attribute) {
   if (attribute == null) {
     attribute = "currentPrice";
   }
+  var cache = CacheService.getScriptCache();
+  // cache.removeAll([instrument]);
   var json = ASX_json(instrument);
   var val = json[attribute];
   return json[attribute];
@@ -45,22 +47,33 @@ function json2array(json, kv = [], s = "") {
 
 // Return the value of the attribute for the instrument from the ASX website
 function ASX_price(instrument) {
-   var json = ASX_json(instrument);
+  var json = ASX_json(instrument);
   return json["currentPrice"];
 }
 
 // Fetch the json from our yahoo finance service
 function ASX_json(instrument) {
   url = "http://mockingbirdinvestment.com:8000/yf/" + instrument;
-  var response = UrlFetchApp.fetch(url);
-  if (response == null) {
-    Logger.log("No response");
-    return "No response"
+
+  var cache = CacheService.getScriptCache();
+  // cache.removeAll(instrument)
+  content = cache.get(instrument);
+  if (content == null) {
+    Logger.log("Cache miss");
+    var response = UrlFetchApp.fetch(url);
+    if (response == null) {
+      Logger.log("No response");
+      return "No response"
+    } else {
+      var content = response.getContentText();
+      cache.put(instrument, content, 300 /* seconds */ );
+      Logger.log(content);
+    }
   } else {
-    var content = response.getContentText();
-    Logger.log(content);
-    return json = JSON.parse(content);
+    Logger.log("Cache hit");
   }
+  json = JSON.parse(content);
+  return json;
 }
 
 // Helper for url fetch options
@@ -70,6 +83,3 @@ function options() {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
   };
 }
-
-
-
