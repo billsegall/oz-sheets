@@ -1,0 +1,53 @@
+.\" ************************************************************
+.\"
+.\" name sect foot-centre foot-left  head-centre   origin  architecture
+.TH yfd  8  "22 Mar 2025"  "oz-sheets"  "yfd"
+.SH NAME
+.BR yfd " \- expose Yahoo Finance data via a simple JSON API."
+.SH SYNOPSIS
+.TP
+yfd [\-h|\-V]
+.SH OPTIONS
+.LP
+.TP 4
+\fB\-h\fP (\fB\-\-help\fP)
+Prints a brief usage message containing legal syntax and functions and
+exits.
+.TP 4
+\fB\-V\fP (\fB\-\-version\fP)
+Prints the version number.
+.SH DESCRIPTION
+.LP
+The \fByfd\fP daemon exports an HTTP endpoint through which clients can
+request data from the Yahoo Finance website in JSON format.
+.LP
+The daemon is intended for use with
+.BR systemd (8)
+and consequently does not support daemonisation or
+.BR syslog (3)
+output, relying on a systemd unit to run as a service.
+.LP
+.B yfd
+should not be deployed directly in production, but should use a
+web-facing proxy such as
+.B nginx
+
+.LP
+.SH EXIT CODES
+.PP
+.TP 8
+0
+Suceeded.
+.TP 8
+1
+On error.
+.LP
+.SH "SEE ALSO"
+.LP
+.BR nginx (8),
+.BR systemd (8),
+.LP
+.B https://finance.yahoo.com
+.SH AUTHORS
+.LP
+David Arnold (davida@pobox.com)
