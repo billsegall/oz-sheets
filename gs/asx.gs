@@ -51,6 +51,12 @@ function ASX_last_price(instrument) {
   return json["currentPrice"];
 }
 
+// Return the last known price for crypto (~20 min delayed)
+function ASX_crypto(coin) {
+  var json = ASX_json(coin);
+  return json["regularMarketPrice"];
+}
+
 // Return the value of the attribute for the instrument
 function ASX(instrument, attribute) {
   var json = ASX_json(instrument);
@@ -62,22 +68,42 @@ function ASX(instrument, attribute) {
 
 
 // Fetch the json from our yahoo finance service
-function ASX_json(instrument) {
+function ASX_json(instrument, retry=1) {
   url = "http://mockingbirdinvestment.com:8000/yf/" + instrument;
 
+  if (retry < 0) {
+      return { "error": "timeout", "currentPrice": "-1001", };
+  }
   var cache = CacheService.getScriptCache();
   // cache.removeAll(instrument)
   content = cache.get(instrument);
   if (content == null) {
     Logger.log("Cache miss");
-    var response = UrlFetchApp.fetch(url);
+    var response;
+    try {
+      response = UrlFetchApp.fetch(url);
+    } catch (e) {
+      Logger.log("Caught:" + e.message);
+      // Try again
+      Utilities.sleep(100) 
+      return ASX_json(instrument, --retry);
+    }
+    if (typeof response === 'undefined') {
+      Logger.log("UrlFetchApp() failed")
+            return { "error": "UrlFetchApp() failed", "currentPrice": "-1003", };
+    }
     if (response == null) {
       Logger.log("No response");
-      return "No response"
+      return ASX_json(instrument, --retry)
     } else {
-      var content = response.getContentText();
-      cache.put(instrument, content, 300 /* seconds */ );
-      Logger.log(content);
+      var code = response.getResponseCode()
+      if (code != 200) {
+        return code;
+      } else {
+        var content = response.getContentText();
+        cache.put(instrument, content, 300 /* seconds */ );
+        Logger.log(content);
+      }
     }
   } else {
     Logger.log("Cache hit");
