@@ -48,12 +48,22 @@ function json2array(json, kv = [], s = "") {
 // Return the last known price (~20 min delayed)
 function ASX_last_price(instrument) {
   var json = ASX_json(instrument);
-  return json["currentPrice"];
+  if (instrument.length == 3) { // Assume equities
+    return json["currentPrice"];
+  } else { // Asssume ETFs and crypto
+    return json["regularMarketPrice"];
+  }
 }
 
 // Return the last known price for crypto (~20 min delayed)
 function ASX_crypto(coin) {
   var json = ASX_json(coin);
+  return json["regularMarketPrice"];
+}
+
+// Return the last known price for crypto (~20 min delayed)
+function ASX_etf(etf) {
+  var json = ASX_json(etf);
   return json["regularMarketPrice"];
 }
 
