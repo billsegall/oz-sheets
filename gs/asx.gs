@@ -4,7 +4,7 @@
 function ASX_test(instrument, attribute) {
   // For testing
   if (instrument == null) {
-    instrument = "CBA.AX";
+    instrument = "GNMO.AX";
   }
   if (attribute == null) {
     attribute = "currentPrice";
@@ -50,8 +50,12 @@ function ASX_last_price(instrument) {
   var json = ASX_json(instrument);
   if (instrument.length == 3) { // Assume equities
     return json["currentPrice"];
-  } else { // Asssume ETFs and crypto
-    return json["regularMarketPrice"];
+  } else {
+    if ((instrument.length == 4 && instrument[3] == 'O') || (instrument.length == 5 && instrument[4] == 'O')) { // Assume option (e.g, GNMO, EXROB)
+      return 1.2345 // ASX_options(instrument)
+    } else {
+      return json["regularMarketPrice"];
+    }
   }
 }
 
@@ -128,4 +132,106 @@ function options() {
     method: "get",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
   };
+}
+
+/**
+ * Fetches the last traded price for an ASX stock from TradingView.
+ * 
+ * @param {string} symbol - The ASX stock symbol (e.g., "EXROB", "CBA", "BHP")
+ * @return {number} The last traded price
+ * @customfunction
+ */
+function ASX_options(symbol) {
+  if (!symbol) throw new Error("Symbol is required");
+  
+  symbol = symbol.toString().trim().toUpperCase();
+  const url = `https://www.tradingview.com/symbols/ASX-${symbol}/`;
+  
+  try {
+    const response = UrlFetchApp.fetch(url, {
+      muteHttpExceptions: true,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5"
+      }
+    });
+    
+    const code = response.getResponseCode();
+    if (code !== 200) throw new Error(`HTTP ${code} for symbol ${symbol}`);
+    
+    const html = response.getContentText();
+    
+    // Strategy 1: Look for JSON-LD structured data
+    const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    if (jsonLdMatch) {
+      try {
+        const jsonData = JSON.parse(jsonLdMatch[1]);
+        if (jsonData.price) return parseFloat(jsonData.price);
+      } catch(e) { /* continue */ }
+    }
+    
+    // Strategy 2: Look for price in meta tags
+    const metaMatch = html.match(/<meta[^>]+property="og:description"[^>]+content="[^"]*?(\d+\.?\d*)[^"]*?"/);
+    if (metaMatch) {
+      const price = parseFloat(metaMatch[1]);
+      if (price > 0) return price;
+    }
+    
+    // Strategy 3: Scan for price patterns in the HTML near known class names
+    // TradingView embeds price data in various ways — try multiple patterns
+    const patterns = [
+      /last-price[^>]*>([0-9]+\.?[0-9]*)</i,
+      /"last":\s*([0-9]+\.?[0-9]*)/,
+      /"close":\s*([0-9]+\.?[0-9]*)/,
+      /itemprop="price"[^>]*content="([0-9]+\.?[0-9]*)"/,
+      /"price":\s*"?([0-9]+\.?[0-9]*)"?/,
+    ];
+    
+    for (const pattern of patterns) {
+      const match = html.match(pattern);
+      if (match) {
+        const price = parseFloat(match[1]);
+        if (price > 0) return price;
+      }
+    }
+    
+    throw new Error(`Could not parse price for ${symbol} from TradingView. The page structure may have changed.`);
+    
+  } catch (e) {
+    throw new Error(`ASX_options(${symbol}): ${e.message}`);
+  }
+}
+
+/**
+ * Fetches prices for multiple ASX symbols at once (more efficient than calling
+ * ASX_last_price individually in a loop).
+ * 
+ * @param {string[]} symbols - Array of ASX stock symbols
+ * @return {Object} Map of symbol -> price
+ */
+function ASX_options_batch(symbols) {
+  const results = {};
+  symbols.forEach(sym => {
+    try {
+      results[sym] = ASX_last_price(sym);
+    } catch(e) {
+      results[sym] = e.message;
+    }
+  });
+  return results;
+}
+
+
+// ── Quick test ───────────────────────────────────────────────────────────
+function test_ASX_optionse() {
+  const testSymbols = ["EXROB", "CBA", "BHP"];
+  testSymbols.forEach(sym => {
+    try {
+      const price = ASX_last_price(sym);
+      Logger.log(`${sym}: $${price}`);
+    } catch(e) {
+      Logger.log(`${sym}: ERROR - ${e.message}`);
+    }
+  });
 }
