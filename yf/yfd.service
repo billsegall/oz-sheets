@@ -1,0 +1,11 @@
+[Unit]
+Description=Yahoo Finance Data daemon
+After=network.target
+
+[Service]
+DefaultDependencies=yes
+Type=Exec
+ExitType=main
+Environment="PATH=%INSTALL_DIR%/venv/bin:$PATH"
+WorkingDirectory="%INSTALL_DIR%"
+ExecStart=fastapi run %INSTALL_DIR%/api.py

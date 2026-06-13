@@ -1,0 +1,88 @@
+[project]
+name = "yfd"
+description = "HTTP API for Yahoo Finance data"
+readme = "README.md"
+license = {file = "COPYING"}
+keywords = ["yahoo", "finance", "market data", "rest", "json", "prices"]
+
+dynamic = ["version"]
+dependencies = [
+    "fastapi[standard]",
+    "yfinance",
+]
+requires-python = ">= 3.9"
+authors = [
+     {name = "David Arnold", email = "d@0x1.org"},
+     {name = "Bill Segall", email = "bill@segall.net"},
+]
+
+maintainers = [
+     {name = "David Arnold", email = "d@0x1.org"},
+     {name = "Bill Segall", email = "bill@segall.net"},
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: No Input/Output (Daemon)",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Natural Language :: English",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+[project.urls]
+source = "https://github.com/billsegall/oz-sheets"
+download = "https://github.com/billsegall/oz-sheets/releases"
+issues = "https://github.com/billsegall/oz-sheets/issues"
+
+[project.scripts]
+#yfd = ""
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "build",
+    "flake8",
+    "flit",
+    "isort",
+    "pre-commit",
+    "pylint",
+]
+
+[build-system]
+requires = ["flit_core >= 3.4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "api"
+
+[tool.flit.sdist]
+include = [
+    "yfd.8",
+    "yfd.unit",
+]
+
+[tool.black]
+target-version = ["py39", "py310", "py311", "py312", "py313"]
+line-length = 120
+skip-magic-trailing-comma = true
+
+[tool.flake8]
+max-line-length = 120
+ignore = ["E203", "E501", "W503"]
+exclude = [".git", "__pycache__", ".venv", "venv"]
+per-file-ignores = ["*/__init__.py: F401"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
