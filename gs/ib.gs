@@ -66,10 +66,10 @@ function IB_eod(symbol) {
   const IB_EOD_BASE   = 'https://ib.segall.net/api/eod/';
 
     if (!symbol) return '#ERROR: symbol required';
-    const url = IB_EOD_BASE + encodeURIComponent(String(symbol).trim().toUpperCase()) +
-      '?key=' + IB_API_KEY;
+    // Key goes in a header, not the query string, so it stays out of server access logs
+    const url = IB_EOD_BASE + encodeURIComponent(String(symbol).trim().toUpperCase());
     try {
-      const resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      const resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, headers: {'X-API-Key': IB_API_KEY} });
       const data = JSON.parse(resp.getContentText());
       if (data.error) return '#ERROR: ' + data.error;
       return data.close;
