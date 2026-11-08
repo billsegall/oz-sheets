@@ -29,6 +29,11 @@ function IB_last_price(instrument) {
     return parsed.price;
   }
 
+  // Script Properties are per Apps Script project; a missing key otherwise
+  // surfaces as UrlFetchApp's cryptic "Header:null".
+  if (!IB_BASE_URL || !IB_API_KEY) {
+    return "#ERROR: set IB_BASE_URL and IB_API_KEY in Project Settings → Script Properties";
+  }
   var url = IB_BASE_URL + "/api/ib/price/" + symbol;
   var response;
   try {
@@ -68,6 +73,7 @@ function IB_eod(symbol) {
   const IB_EOD_BASE   = 'https://ib.segall.net/api/eod/';
 
     if (!symbol) return '#ERROR: symbol required';
+    if (!IB_API_KEY) return '#ERROR: set IB_API_KEY in Project Settings → Script Properties';
     // Key goes in a header, not the query string, so it stays out of server access logs
     const url = IB_EOD_BASE + encodeURIComponent(String(symbol).trim().toUpperCase());
     try {
