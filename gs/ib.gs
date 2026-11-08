@@ -20,7 +20,7 @@ function IB_test(instrument) {
 // Accepts "CBA" or "CBA.AX" — .AX suffix stripped before lookup.
 // Falls back to null if IB is unavailable.
 function IB_last_price(instrument) {
-  symbol = instrument.toString().replace(/\.AX$/i, '').toUpperCase();
+  var symbol = instrument.toString().replace(/\.AX$/i, '').toUpperCase();
   var cache = CacheService.getScriptCache();
   var cached = cache.get(symbol);
   if (cached != null) {
@@ -39,16 +39,18 @@ function IB_last_price(instrument) {
   }
 
   var code = response.getResponseCode();
-  if (code == 503) { // weekends 
-    cacheKey = "IB_EOD_" + symbol;
+  if (code == 503) { // IB has no price and the server had no close to fall back on
+    var cacheKey = "IB_EOD_" + symbol;
     cached = cache.get(cacheKey);
     if (cached != null) {
       Logger.log("IB EOD cache hit: " + symbol);
-      return cached;
-    } else {
-      price = IB_eod(symbol);
-      cache.put(cacheKey, price, 300 /* seconds */);
-    }   
+      return Number(cached);
+    }
+    var price = IB_eod(symbol);
+    if (typeof price == 'number') {
+      cache.put(cacheKey, String(price), 300 /* seconds */);
+    }
+    return price;
   }
 
   if (code != 200) {
